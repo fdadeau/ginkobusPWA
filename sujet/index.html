@@ -1,0 +1,532 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>TP SAMP - Progressive Web Apps</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script>
+        document.addEventListener("DOMContentLoaded", function(_e) {
+            var main = document.querySelector("nav");
+            (function loop() {
+                main.style.top = Math.max(0, 145 - window.scrollY) + 10 + "px";    
+                window.requestAnimationFrame(loop);
+            })();
+        });
+        
+        
+        
+    </script>
+    
+</head>
+    
+<body>
+        
+<main>
+    
+    <header>
+        <H1>TP Software Architecture and Mobile Programming<br>
+            Progressive Web Applications</H1>
+    </header>    
+    
+<input type="radio" id="rad1" name="radsection" checked>
+<section id="1">
+    
+<h2>Présentation des PWA</h2>
+
+<p>Les Progressive Web Applications, introduites par Google autour de 2015, se présentent comme des applications 
+    natives qui sont en réalités des applications web s'exécutent dans un "application shell" (un navigateur qui 
+    s'exécute en plein écran, sans les barres d'adresse). 
+</p>    
+    
+<p>Les PWA se veulent : </p>
+    
+<ul>
+    <li><strong>Progressives</strong> :  
+        elles fonctionnent sur n'importe quel périphérique en intégrant les fonctionnalités disponibles du navigateur et de l'appareil utilisé.</li>
+    <li><strong>Sécurisées</strong> : 
+     afin de répondre aux problématiques de sécurité des échanges entre les utilisateurs et les sites, les PWA 
+        sont fiables et sûres par la mise en place d’un protocole HTTPS.</li>
+    <li><strong>Engageantes</strong> : 
+        elles proposent une expérience utilisateur immersive en plein écran et un réengagement facilité grâce à l'envoi de notifications push web.</li>
+    <li><strong>Installables</strong> :
+        l'utilisation d'un fichier manifest permet aux PWA de proposer, à l'instar d'une application mobile native, l'installation d'un raccourci sur l'écran d'accueil du terminal mobile.</li>
+    <li><strong>Rapides</strong> :
+        une fois le site chargé, la navigation doit se faire de manière rapide et fluide.
+    </li>
+    <li><strong>Optimisées pour le référencement</strong> :
+            utilisant les technologies du web, les progressive web app peuvent être référencées sur les moteurs 
+        de recherche de la même manière que n'importe quel site web classique.
+    </li>
+    <li><strong>Indépendantes de la connexion</strong> :
+        Grâce à la gestion du cache via l’utilisation d’un Service Worker, une fois le contenu chargé une première fois, il est possible de le consulter même dans les zones de faible connexion réseau.</li>
+</ul>    
+    
+<p>Par ailleurs, elles simplifient les coûts de développement, de maintenance, et leur mise à jour est facilitée. </p>    
+    
+    
+<h3>Slides de présentation utilisées en TP</h3>    
+    
+<iframe src="PWA.pdf" style="display: block; margin: 20px auto; width: 70vw; height: 40vw;"></iframe>
+
+</section>    
+    
+    
+    
+<input type="radio" id="rad2" name="radsection">
+<section id="2">
+    
+<h2>Application mobile de travail</h2>
+
+<p>Vous allez vous travailler dans ce TP avec une application web déjà réalisée, qui contient déjà toute la logique applicative
+    et le rendu graphique. </p>
+    
+<p>Cette application simule une <strong>scanette</strong> et illustre l'utilisation de l'appareil photo, qui servira à la 
+    lecture de code-barre de produits. </p>
+    
+<p>Le fonctionnement de l'application est simple : l'utilisateur scanne des produits qui composent son panier. Une fois 
+    tous les produits scannés, il peut les transférer pour terminer ses achats. </p>
+
+<h3>Tour d'horizon de l'application</h3>    
+
+<p>L'application permet de simuler une scanette de supermarché. Il y a basiquement 4 écrans : </p>
+
+<ol style="list-style-type: lower-alpha;">
+    
+    <li>L'écran de démarrage, qui n'a pas d'autre fonction que d'afficher un joli logo et 
+        donner un exemple de gestion des événements tactiles. 
+        <figure>
+        <img src="images/sc-accueil.png">
+        </figure>    
+    
+    </li>
+
+    <li>L'écran du panier, depuis lequel est accessible la saisie des produits qui va s'appuyer sur 
+        l'utilisation de l'appareil photo du dispositif mobile pour analyser un code barre photographié 
+        par celui-ci. En sélectionnant une ligne de la liste, on peut également ajuster les quantités 
+        (notamment supprimer un produit en mettant sa quantité à 0). 
+    
+        <figure>
+        <img src="images/sc-panier.png">
+        <img src="images/sc-photo.png">
+        <img src="images/sc-quantites.png">
+        </figure>
+    
+    </li>
+    
+    <li>L'écran de paramétrage qui permet à l'utilisateur de saisir les informations liées à son compte : 
+        le numéro de sa carte de fidélité, son email, son nom et son prénom. 
+
+        <figure>    
+        <img src="images/sc-compte.png">
+        </figure>    
+
+    </li>
+
+    <li>L'écran de transmission d'un panier non vide, si les infos de l'utilisateur sont correctement remplies, 
+    au serveur distant. Celui-ci envoie un réponse confirmant la bonne transmission du panier, ce qui aura pour 
+    conséquence de vider le panier de l'utilisateur.
+        <figure>
+        <img src="images/sc-transmission-vide.png">
+        <img src="images/sc-transmission.png">
+        <img src="images/sc-transmission-OK.png">
+        <img src="images/sc-transmission-KO.png">
+        </figure>    
+    </li>
+    
+    </ol>    
+
+
+<p>Quelques points à remarquer : </p>
+
+<ul>
+    <li>la reconnaissance de code-barre à partir d'une photo est faite par l'intermédiaire d'une bibliothèque 
+        (objet nommé "JOB" dans le code) qui prend une image et renvoie les codes-barre qui existent dans celle-ci. 
+
+    </li>
+    
+    <li>la liste des produits connus et reconnus est donnée dans le fichier CSV "produits.csv" situé à la racine 
+        de l'application et qui décrit sur chaque ligne : le code EAN, le libellé du projet et son prix unitaire en euros.
+    </li>
+    
+    <li>les données personnelles et le panier de l'utilisateur sont sauvegardés à chaque modification dans le stockage 
+        local du navigateur. Ainsi les achats/infos déjà enregistrées sont toujours présentes à la visite suivante.
+    </li>
+    
+    <li>la transmission des achats va envoyer les données à un serveur distant. Cette action ne peut se réaliser que 
+        si l'appareil sur laquelle est exécutée l'application est connecté à internet. <br>
+        Cette dernière étape n'est pour l'instant pas codée dans l'application, ce sera à vous de la réaliser en fin de TP.     
+    </li>
+</ul>
+
+    
+    
+<h3>Travail à réaliser</h3>
+
+<ol>
+
+    <li>Récupérez dans <a href="ressources/scanettePWA.zip">cette archive</a> le code de l'application au format web.</li>
+    
+    <li>Prenez quelques minutes pour lancer l'application, la tester et découvrir le code. Testez l'application avec 
+        Chrome (utile pour la suite), en simulant un appareil mobile (ytilisez le menu contextuel "Inspecter" puis 
+        choisissez un appareil mobile, celui que vous voulez, plutôt dans la catégorie téléphone).
+    </li>
+</ol>
+
+<p class="important">Attention, pour fonctionner, l'application doit être hébergée sur 
+    un serveur web local (accès via http://...). </p>
+
+<p>Pour héberger localement un site web : </p>
+<ul>
+    <li>Solution 1 : avoir déjà un serveur local (via apache, node ou via votre éditeur de code préféré - type Brackets)</li>
+    <li>Solution 2 : passer par Node.js pour créer un serveur local. Pour ce faire, créez un projet Node.js avec les modules 
+        express (à installer via npm), http. Utiliser le code du fichier <a href="ressources/index.js">index.js fourni ici</a>. 
+        <label for="cbAideNode">Besoin d'aide sur Node.js ?</label>
+        <input type="checkbox" id="cbAideNode">
+        <div>
+            <p>Attention au proxy dans les salles de TP pour lancer <code>node</code> et <code>npm</code>.</p>
+            <p>Pour fixer le proxy, si ce n'est pas déjà fait : <br>
+            <code>npm config set proxy http://proxy-www.univ-fcomte.fr:3128</code><br>
+            <code>npm config set https-proxy http://proxy-www.univ-fcomte.fr:3128</code>
+            </p>
+            <p>Pour créer un projet Node.js à partir du fichier index.js : <br>
+            <code>npm init</code> (vous pouvez les laisser les valeurs par défaut à chaque étape)
+            </p>
+            <p>Pour installer le package <code>express</code> à votre projet : <br>
+            <code>npm install express --save</code></p>
+            <p>Lancer le serveur avec la commande <br>
+                <code>node .</code> ou <code>node index.js</code></p>
+            <p>L'application servie doit se trouver dans le répertoire indiqué (par défault <code>webapp</code>)
+            </p>
+            <p>Vous pouvez normalement consulter l'application à l'adresse : <code>http://localhost:8080</code></p>
+        </div>
+    </li>
+</ul>
+    
+<p>Pour tester l'application, vous pouvez récupérer les deux images ci-dessous, qui représentent les deux codes-barres
+    déjà présents dans la liste de produits. </p>
+    
+<p style="text-align: center;">
+    <img src="images/__barcode-example.png" style="display: inline-block;">
+    <img src="images/__barcode-mouchoirs.png" style="display: inline-block;"></p>
+    
+</section>
+                  
+<input type="radio" id="rad3" name="radsection">
+<section id="3">
+    
+    <h2>Déployer l'application en HTTPS</h2>
+
+<p>Le but de cette partie est de déployer l'application sur un vrai serveur, en HTTPS, pour pouvoir 
+    la tester sur votre téléphone.</p>
+
+<p>Si vous ne disposez pas d'une solution d'hébergement qui vous est propre, Github permet avec 
+    <a href="https://pages.github.com/" target="_blank">Github Pages</a> de fournir un moyen simple 
+    d'hébergement de fichiers. </p>
+
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/2MsN8gpT6jY" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="display: block; width: 560px; margin: 10px auto;"></iframe>
+    
+<p>Créez un dépôt sur <a href="https://github.com/" target="_blank">Github</a> et déposez le fichier de l'application 
+    web. Suivez les indications pour créer un dépôt à partir d'un dossier existant. </p>
+    
+<p>
+    <code>git init</code> <br>
+    <code>...</code> (suivez les indications données par Github) <br>
+    <code>git add</code> ...<br>
+    <code>git commit -am "..."</code><br> 
+    <code>git push -u origin master</code>
+</p>
+    
+<p>Activez Github Pages et déployez la version initiale de l'application. 
+    Dans les options de Github Pages (onglet <em>settings</em>), forcez la connexion au site en HTTPS.
+</p>
+
+<p>Prenez votre téléphone ou une tablette, ouvrez un nagivateur et consultez la page qui est indiquée dans Github. </p>
+
+<p>L'url devrait être de la forme : <code>https://votre-login.github.io/votre-projet</code></p>
+
+<p>Vous pouvez vous amuser à tester l'application. La liste initiale des produits déjà connus étant un peu 
+    restreinte, n'hésitez pas à l'enrichir pour avoir vos données à vous. </p>
+
+<p>N'oubliez pas, en cas de modification du code, de mettre à jour sur le serveur avec 
+    <code>git commit -am "<i>votre message de commit</i>"</code> puis <code>git push</code>.</p>
+
+</section>
+    
+    
+<input type="radio" id="rad4" name="radsection">
+<section id="4">
+
+    <h2>Réaliser un audit de l'application</h2>
+    
+    <p>Chrome propose, dans l'onglet "Audits" des outils développeurs, l'outil LightHouse qui permet d'analyser 
+    un site ou une application web, notamment pour vérifier si celle-ci est compatible avec les exigences liées
+    au déploiement d'une Progressive Web App qui se comporte de façon optimale. </p>
+    
+    <p>La checklist des vérifications à effectuer est donnée ici : 
+        <a class="dont" href="https://developers.google.com/web/progressive-web-apps/checklist" target="_blank">
+            https://developers.google.com/web/progressive-web-apps/checklist</a>
+    </p>
+
+    <p>Bien évidemment, vous n'aurez pas à faire cet audit à la main, c'est l'outil LightHouse qui le fera 
+    pour vous. </p>
+    
+    <p>Lancer l'audit de l'application hébergée pour une PWA. Deux points cruciaux devraient manquer : </p>
+    <ul>
+        <li>l'existence d'un manifeste pour déclarer l'application comme utilisable hors du navigateur, 
+            comme une web app installable sur votre appareil </li>
+        <li>la mise en place d'un Service Worker qui va permettre d'utiliser l'application hors ligne en 
+            mettant en cache une partie des ressources nécessaires, et en redirigeant vers le cache les 
+            requêtes HTTP qui seraient faites alors que l'appareil est hors-ligne. </li>
+    </ul>
+    
+<p>Vous devriez, de ce fait, obtenir un résultat d'audit proche de celui de la capture d'écran ci-dessous :  </p>
+    
+<img src="images/audit1.png" class="figure">
+
+
+<p>Dans les étapes suivantes, nous nous appuyerons sur les ressources ci-dessous, qui seront utiles pour réaliser 
+    les étapes nécessaires pour créer la PWA : </p>
+<ul>
+    <li>MDN : <a class="dont" href="https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps" target="_blank">
+        https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps</a></li>
+    <li>Google CodeLabs : <a class="dont" href="https://codelabs.developers.google.com/codelabs/your-first-pwapp" target="_blank">
+        https://codelabs.developers.google.com/codelabs/your-first-pwapp</a></li>
+</ul>
+
+<p>Ouvrez ces deux liens et gardez-les dans un coin comme ressource, vous reviendrez régulièrement. </p>    
+    
+</section>
+    
+    
+<input type="radio" id="rad5" name="radsection">
+<section id="5">
+
+<h2>Rendre l'application installable avec un fichier manifest</h2>
+    
+<p>Le manifest d'une application web permet de décrire un certain nombre d'informations concernant la PWA, notamment : </p>    
+    
+<ul>
+    <li>son nom</li>
+    <li>son nom raccourci (utilisé pour les icônes)</li>
+    <li>la ou les icônes utilisables lors de l'installation</li>
+    <li>la page de démarrage de l'application</li>
+    <li>les couleurs de thème et de fond, utilisées pour réaliser un splashscreen</li>
+    <li>l'orientation de l'appareil</li>
+    <li>...et bien d'autres.</li>
+</ul>    
+
+<p>La documentation relative aux manifestes d'une Progressive Web Application est disponible ici :<br>
+    <a class="dont" href="https://developers.google.com/web/fundamentals/web-app-manifest" target="_blank">
+        https://developers.google.com/web/fundamentals/web-app-manifest</a>.
+</p>    
+        
+<p>En vous appuyant sur la ressource précédente, et sur ce qui est décrit dans ce document : <br>
+<a class="dont" href="https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Installable_PWAs" target="_blank">
+    https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Installable_PWAs </a><br>
+créez un fichier manifest pour l'application, que vous n'oublierez pas d'inclure dans le fichier <code>index.html</code>. 
+</p>
+
+<p>Auditez en local, et mettez à jour votre site sur le serveur. Si votre manifest ne contient pas d'erreurs, vous 
+    devriez obtenir un résultat d'audit proche de la capture ci-dessous.</p>
+
+<img src="images/audit2.png" class="figure">    
+
+
+<p>Si vous consultez l'application en ligne avec un téléphone pas trop ancien vous devriez vous apparaitre une 
+    banière qui vous propose d'ajouter l'application à l'écran d'accueil. Validez, et vous devriez voir un 
+    raccourci qui se créé dans vos applis, utilisant l'icône et le nom spécifié. 
+</p>
+
+<p>Si la banière n'apparaît pas, don't panic, vous pouvez obtenir le même résultat en choisissant "ajouter 
+    à l'écran d'accueil" (petit bouton "home" au bout de la barre d'adresse qui doit apparaître si le manifeste 
+    est correctement réalisé). </p> 
+
+<p>Vous constaterez que l'application s'installe sur l'appareil et s'exécute en plein écran (sans les 
+    barres de navigation) comme une application native !</p>
+    
+</section>
+
+<input type="radio" id="rad6" name="radsection">
+<section id="6">    
+
+    <h2>Rendez l'application utilisable hors ligne</h2>
+
+<p>La version de l'application obtenue à l'étape précédente est bien, mais ce n'est pour l'instant qu'une coquille
+    qui charge les ressources depuis internet. Elle n'est donc pas utilisable hors connexion. </p>
+
+
+<p>L'objectif de cette étape va être d'ajouter un <code>Service Worker</code> qui va permettre d'utilier l'application 
+    hors ligne en spécifiant la stratégie de mise en cache des données de l'application.</p>
+    
+<p>En vous appuyant sur ce qui est décrit dans ce document : <br>
+<a class="dont" href="https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Offline_Service_workers">https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Offline_Service_workers</a><br>
+    modifiez l'application existante pour la rendre utilisable hors ligne.</p> 
+
+<p>Vous pouvez utiliser la stratégie proposée dans ce document qui consiste, à l'installation, à mettre en cache 
+    toutes les données listées comme ressources, et à consulter ensuite ce cache en priorité (et sinon, aller 
+    chercher la ressource sur le réseau). Cette stratégie a pour avantage de permettre un chargement très rapide
+    des données déjà en cache. 
+</p>    
+
+<p>Pour l'instant, c'est la stratégie que nous allons utiliser. </p>
+        
+<p>Les deux événements auxquels vous devez répondre pour l'instant sont : <code>install</code> pour l'installation 
+    du Service Worker et <code>fetch</code> pour décrire la stratégie d'accès aux ressources (dans le cache ou 
+    sur le réseau). Comme dans l'article ci-dessus, utilisez une liste de ressources que vous ajoutez au cache
+    à l'installation. </p>    
+    
+<p>Une fois cette stratégie implantée, vous devriez pouvoir auditer l'application, avec (presque) tous les 
+    feux au vert, si vous êtes en local, comme ci-dessous : </p>    
+    
+    <img src="images/audit3.png" class="figure">
+    
+    <p>Déployez l'application sur le serveur. Auditez-la depuis le serveur (qui fournit l'hébergement forcé en HTTPS). 
+        Tous les voyants sont normalement au vert. </p>
+    
+    <img src="images/audit4.png" class="figure">
+
+    <p>Vérifiez dans la partie "Application", "Cache Storage" que les fichiers que vous avez décrits ont 
+        correctement été mis en cache. </p>
+
+    <img src="images/cache-storage.png" class="figure">
+
+    <p>Reprenez l'application sur votre téléphone et relancez-la. Les données doivent être mises en cache. <br>
+        Quittez l'application, mettez l'appareil en mode avion, et relancez l'application. Vous devriez pouvoir 
+        la faire fonctionner et profiter de ses fonctionnalités alors que vous êtes hors-ligne ! </p>
+    
+    <p>N'est-ce pas merveilleux ?</p>
+
+</section>    
+    
+
+<input type="radio" id="rad7" name="radsection">
+<section id="7">
+    
+    <h2>Gérer les évolutions du contenu de l'application</h2>
+    
+    <p>La stratégie mise en place précédemment consiste à mettre en cache toutes les données applicatives
+        et piocher ensuite dans le cache en priorité. Si une donnée n'est pas présente, alors celle-ci est 
+        récupérée sur le réseau et elle-même ajoutée au cache. </p>
+    
+    <p>Si l'application n'a pas vocation à évoluer ou si elle s'appuie sur des données statiques, c'est une 
+        option viable. Mais si l'application peut être amenée à voir ses données applicatives évoluer, 
+        il ne sera pas possible de faire évoluer celles-ci sans remettre toute l'application en cache, 
+        ce qui n'offre pas une grande souplesse. De même, si l'application dépend de ressources externes, 
+        ces dernières ne devraient pas être mises en cache. </p>
+    
+    <p>Pour notre scanette, nous aimerions pouvoir faire évoluer certains éléments de l'application, 
+        comme par exemple la liste des produits, sans devoir réinstaller systématiquement toute l'application. </p>
+    
+    <p>Par ailleurs, l'application va s'appuyer sur un serveur externe pour transmettre le panier. 
+        Il n'est donc pas question de mettre en cache la réponse de ce serveur, sinon elle sera 
+        toujours la même ! Et accessoirement, les données ne seront jamais transmises au serveur 
+        distant !</p>
+    
+    <p>Pour pallier ce problème, nous allons implanter une stratégie ad hoc de service de contenu. Celle-ci 
+    s'appuiera sur deux listes : </p>
+    
+    <ul>
+        <li>La liste de ressources mises en cache. On ne mettra que ces éléments en cache, en vue d'une 
+            utilisation hors-ligne. Cette liste correspond à la liste de ressources déjà définie à l'étape
+            précédente. </li>
+        <li>Une liste de ressources "modifiables", qui seront prioritairement récupérées sur le réseau 
+            (et mises en cache à cette occasion) :
+            <img src="images/cache4.png" class="figure" style="width: 40%;">
+            ou, à défaut, reprises du cache si le réseau n'est pas disponible : 
+            <img src="images/cache1.png" class="figure" style="width: 40%;">
+        </li>
+    </ul>
+    
+    <p>Modifiez le code associé à l'événement <code>fetch</code> pour faire en sorte que : </p>
+    
+    <ul>
+        <li>si le fichier est l'un des 4 fichiers <code>index.html</code>, <code>styles.css</code>, <code>app.js</code> 
+            et <code>produits.csv</code>, alors on ira en priorité les chercher sur le réseau et, ce faisant, 
+            on mettra à jour le cache pour toujours avoir la dernière version de ces fichiers. 
+            Si le site n'est pas accessible, alors on ira chercher dans le cache la version précédemment 
+            enregistrée de cette ressource. </li>
+        <li>si le fichier n'appartient pas à la liste ci-dessus, alors on ira le chercher dans le cache, 
+            et à défaut (si ce n'est pas un fichier de l'application) on va le chercher sur internet, 
+            mais on ne le met pas en cache. </li>
+    </ul>
+
+    <p>Mettez en ligne l'application et testez sa bonne exécution (instrumentez le code pour faire apparaître
+    les messages dans la console indiquant d'où les fichiers demandés sont récupérés). </p>
+    
+    <p>Testez si l'application se comporte correctement, en modifiant entre deux exécution de l'application 
+    la liste de produits pour rendre reconnu un article dont le code n'était précédemment pas dans la liste 
+    de produits. </p>
+    
+    <p>Si ça fonctionne, vous êtes un boss. Félicitez-vous. </p>
+    
+    <p>Pour ceux qui sont intéressés pour aller plus loin, vous trouverez à cette adresse une liste des 
+        différentes stratégies possibles pour la gestion des ressources hors-ligne : 
+    <a class="dont" href="https://developers.google.com/web/fundamentals/instant-and-offline/offline-cookbook/">https://developers.google.com/web/fundamentals/instant-and-offline/offline-cookbook/</a>
+    </p>
+    
+</section>
+    
+    
+<input type="radio" id="rad8" name="radsection">    
+<section id="8">
+
+<h2>Modifiez l'application pour transmettre le panier au serveur distant</h2> 
+
+<p>Pour ceux qui veulent s'amuser un peu, vous pouvez compléter le dernier écran de l'application qui envoie 
+    les données au serveur. </p>
+
+    <p>Pour rappel, voici les écrans qu'il faut obtenir : </p>
+    
+     <figure>
+        <img src="images/sc-transmission-vide.png">
+        <img src="images/sc-transmission-userdata.png">
+        <img src="images/sc-transmission.png">
+        <img src="images/sc-transmission-OK.png">
+        <img src="images/sc-transmission-KO.png">
+        </figure>    
+    
+    <p>Il vous faudra forger une requête POST qui enverra les paramètres suivants : </p>
+    
+    <ul>
+        <li>un couple <code>client=<i>numero</i></code> où <code><i>numero</i></code> désigne la valeur de la carte de 
+            fidélité du client, saisie dans l'écran du compte utilisateur.</li>
+        <li>pour chaque produit, un couple <code><i>EAN</i>=<i>quantité</i></code> où <code><i>EAN</i></code> 
+            est le code EAN 
+            du produit acheté, et <code><i>quantité</i></code> exprime le nombre d'unités de ce produit 
+            qui a été acheté.  </li>
+    </ul>
+    
+    <p>L'URL à laquelle la requête sera envoyée est donnée dans la constante URL_TRANSMISSION qui a pour valeur 
+    <code>https://dept-info.univ-fcomte.fr/licence/SAMP/</code></p>
+    
+    <p>Le serveur renverra un objet JSON contenant un champ <code>status</code> qui sera égal à <code>ok</code> 
+        si la requête était correctement formulée ou <code>ko</code> sinon. En cas de réponse positive, un champ 
+        <code>basket</code> contenant les produits achetés selon le même format qu'à l'envoi sera adjoint à la réponse. 
+    </p>
+
+    <p>Cette requête ne devra être envoyée que si, d'abord, le panier n'est pas vide, et si, ensuite, les 
+        informations du client sont bien toutes renseignées et valides. </p>
+    
+</section>    
+    
+
+
+    <nav>
+        <label for="rad1">Présentation des PWA</label>
+        <label for="rad2">Application mobile du TP</label>
+        <label for="rad3">Hébergement en HTTPS</label>
+        <label for="rad4">Auditer l'application</label>
+        <label for="rad5">Application installable</label>
+        <label for="rad6">Utilisation hors ligne</label>
+        <label for="rad7">&Eacute;volutions du contenu</label>
+        <label for="rad8">Modification de l'appli</label>
+    </nav>
+
+
+    </main>
+    
+    </body>
+    
+</html>
+
