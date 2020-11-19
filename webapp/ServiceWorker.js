@@ -5,28 +5,20 @@
 */
 
 // variable definitions 
-var CACHE_NAME = 'scanettePWA-v1';
+var CACHE_NAME = 'ginkobusPWA-v1';
 
 var contentToCache = [
   './index.html',    
-  './scanettePWA.webmanifest',    
+  './ginkobusPWA.webmanifest',    
   './style.css', 
-  './produits.csv', 
-  './js/app.js', 
-  './js/DecoderWorker.js', 
-  './js/exif.js', 
-  './js/job.js', 
-  './images/logo.png', 
-  './images/barcode-scanner.png', 
-  './images/icon-cart.png', 
-  './images/icon-setup.png', 
-  './images/icon-transmit.png', 
-  './favicon.ico',
+  './app.js', 
+  './icons/favicon.ico',
   './icons/icon-32.png',
   './icons/icon-64.png',
   './icons/icon-96.png',
   './icons/icon-128.png',
   './icons/icon-168.png',
+  './icons/icon-180.png',
   './icons/icon-192.png',
   './icons/icon-256.png',
   './icons/icon-512.png'
@@ -41,7 +33,7 @@ self.addEventListener('install', function(e) {
     }));
 });
 
-var updatableContent = ['index.html', 'style.css', 'app.js', 'produits.csv'];
+var updatableContent = ['index.html', 'style.css', 'app.js'];
 
 // fecthing data
 self.addEventListener('fetch', function(evt) {
