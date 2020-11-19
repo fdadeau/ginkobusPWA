@@ -33,7 +33,7 @@ self.addEventListener('install', function(e) {
     }));
 });
 
-var updatableContent = ['index.html', 'style.css', 'app.js'];
+var updatableContent = ['idex.html', 'style.css', 'app.js'];
 
 // fecthing data
 self.addEventListener('fetch', function(evt) {
