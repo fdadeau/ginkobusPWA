@@ -9,7 +9,7 @@ var CACHE_NAME = 'ginkobusPWA-v1';
 
 var contentToCache = [
   './index.html',    
-  './ginkobusPWA.webmanifest',    
+//  './ginkobusPWA.webmanifest',    
   './style.css', 
   './app.js', 
   './icons/favicon.ico',
