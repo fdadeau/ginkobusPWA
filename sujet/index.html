@@ -471,7 +471,7 @@ créez un fichier manifest pour l'application, que vous n'oublierez pas d'inclur
     doit être récupérée via le réseau. </p>
        
     
-    <p>Pour pallier ce problème, nous allons implanter une stratégie ad hoc de service de contenu. </p>
+    <p>Pour répondre à ces besoins, nous allons implanter une stratégie ad hoc de service de contenu. </p>
     
     <ul>
         <li>Les fichiers structurels de l'application (code HTML, CSS, icônes) sont mis en cache à 
@@ -496,7 +496,8 @@ créez un fichier manifest pour l'application, que vous n'oublierez pas d'inclur
     </ul>
     
     <p>Vous trouverez à cette adresse une liste assez exhaustive des 
-        différentes stratégies possibles pour la gestion des ressources hors-ligne : 
+        différentes stratégies possibles (et le code les implantant) 
+        pour la gestion des ressources hors-ligne : 
         <a class="dont" href="https://developers.google.com/web/fundamentals/instant-and-offline/offline-cookbook/">https://developers.google.com/web/fundamentals/instant-and-offline/offline-cookbook/</a>
     </p>
     
@@ -557,18 +558,18 @@ créez un fichier manifest pour l'application, que vous n'oublierez pas d'inclur
     Le travail de cette partie consistera donc à instancier (ou réinitialiser) la variable <code>fSort</code> 
     et appeler la fonction <code>remplirStations()</code> pour rafraîchir l'affchage. <br>
     Par ailleurs, si vous examinez le code de cette dernière fonction, vous verrez aussi qu'il est possible 
-        d'ajouter un champ <code>distance</code> aux stations pour symboliser leur distance à la position GPS
-        courante. 
+        d'ajouter un champ <code>distance</code> aux stations pour indiquer leur distance à la position GPS
+        courante et le faire apparaître dans cette liste. 
     </p>
     
      <figure>
         <img src="images/sc-geolocation.png">
     </figure>    
     
-    <p>Et pour les courageux, vous pouvez intégrer 
+    <p>Et, pour les courageux, vous pouvez intégrer 
         une <a href="https://fdadeau.github.io/CoursJS/html/chap2-JS-client.html#106" target="_blank">carte OpenStreetMap</a> 
-        pour visualiser les tracés des lignes et les stations...
-    et aller postuler pour un job au service informatique de Ginko Mobilités, pour retrouver nos anciens étudiants &#x1F600;</p>
+        pour visualiser les tracés des circuits des lignes et les stations...
+        et aller postuler pour un job au service informatique de Ginko Mobilités, pour retrouver nos anciens étudiants &#x1F600;</p>
     
      <figure>
         <img src="images/sc-carte0.png">
