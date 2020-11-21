@@ -9,7 +9,7 @@ var CACHE_NAME = 'ginkobusPWA-v1';
 
 var contentToCache = [
   './index.html',    
-//  './ginkobusPWA.webmanifest',    
+  './ginkobusPWA.webmanifest',    
   './style.css', 
   './app.js', 
   './icons/favicon.ico',
@@ -33,45 +33,48 @@ self.addEventListener('install', function(e) {
     }));
 });
 
-var updatableContent = ['idex.html', 'style.css', 'app.js'];
 
-// fecthing data
-self.addEventListener('fetch', function(evt) {
-
-    var fichier = evt.request.url.substr(evt.request.url.lastIndexOf('/')+1);
-    
-    // if requested on an updatable content, load it from the network and cache it
-    if (updatableContent.some(function(uc) { return evt.request.url.indexOf(uc) >= 0; })) {
-        evt.respondWith(
-            caches.open(CACHE_NAME).then(function(cache) {
-                console.log("[Service worker] Trying to fetch from network", fichier);
-                return fetch(evt.request)
-                    .then(function (response) {
-                    // If the response was OK, clone it and store it in the cache.
-                    if (response.status === 200) {
-                        console.log("[Service worker] --> Network available, caching latest version", fichier);
-                        cache.put(evt.request.url, response.clone());
-                    }
-                    return response;
-                }).catch(function (err) {
-                    // Network request failed, try to get it from the cache.
-                    console.log("[Service worker] --> Network unavailable, using cached version", fichier);
-                    return cache.match(evt.request);
+self.addEventListener('fetch', (e) => {
+    // Stratégie initiale : cache ou network avec mise en cache
+    false && e.respondWith(
+        caches.match(e.request).then((r) => {
+            console.log('[Service Worker] Fetching resource: '+e.request.url);
+            return r || 
+                fetch(e.request).then((response) => {
+                    return caches.open(CACHE_NAME).then((cache) => {
+                        console.log('[Service Worker] Caching new resource: '+e.request.url);
+                        cache.put(e.request, response.clone());
+                        return response;
+                    });
                 });
-            }));
-        return;
-    }
-    
-    // otherwise load from cache by default, or fetch it if not present (and update cache)
-    console.log("[Service worker] --> Loading from cache (if present)", fichier);
-    evt.respondWith(
-        caches.open(CACHE_NAME).then(function(cache) {
-            return cache.match(evt.request)
-                .then(function(response) {
-                    return response || fetch(evt.request);
-            })
         })
     );
+    
+    
+    // Stratégie cache-only
+    if (contentToCache.some(file => e.request.url.endsWith(file.substr(2)) && !e.request.url.endsWith("app.js"))) {
+        console.log('[Service Worker] Loading from cache: '+e.request.url);
+        e.respondWith(caches.match(e.request));
+    }
+    else {
+        // Stratégie network + mise en cache, ou alors cache, ou réponse par défaut  
+        e.respondWith(fetch(e.request)
+            .then((response) => {
+                return caches.open(CACHE_NAME).then((cache) => {
+                    console.log('[Service Worker] Fetching from network and caching resource: '+e.request.url);
+                    cache.put(e.request, response.clone());
+                    return response;
+                });
+            })
+            .catch(function() { 
+                return caches.match(e.request).then((r) => {
+                    console.log('[Service Worker] Looking for resource in cache: '+e.request.url);
+                    return r; // || new Response(JSON.stringify({ error: 1 }), { headers: { 'Content-Type': 'application/json' } }); 
+                })
+            })
+        );
+    }
+    
 });
 
 

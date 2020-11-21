@@ -16,30 +16,29 @@ document.addEventListener("DOMContentLoaded", function (_e) {
     function geoloc() {
         //alert("TODO géolocalisation");
         if ("geolocation" in navigator) {
-            var k0 = Object.keys(stations)[0];
-            if (stations[k0].distance) {
+            var btnGeoloc = document.querySelector("#bcStations .btnGeoloc");
+            if (btnGeoloc.classList.contains("active")) {
                 for (var st in stations) {
                     delete stations[st].distance;   
                 }
+                fSort = null;
+                btnGeoloc.classList.remove("active");
                 remplirStations();
                 return;
             }
             navigator.geolocation.getCurrentPosition(function(position) {
-                function fSort(id1, id2) {
+                fSort = function(position, id1, id2) {
                     var d1 = distance(stations[id1].lat, stations[id1].lon, position.coords.latitude, position.coords.longitude);
                     var d2 = distance(stations[id2].lat, stations[id2].lon, position.coords.latitude, position.coords.longitude);
                     return d1 - d2;
+                }.bind(null, position);
+                for (var sta in stations) {
+                    var st = stations[sta];
+                    st.distance = distance(st.lat, st.lon, position.coords.latitude, position.coords.longitude) / 1000;
+                    st.distance = st.distance.toFixed(2);
                 }
-                function fFilter(st) {
-                    var d = distance(st.lat, st.lon, position.coords.latitude, position.coords.longitude);
-                    st.distance = d;
-                    if (! st.nom.endsWith("km")) {
-                        st.nom += " - " + (d/100 | 0) / 10 + " km";
-                    }
-                    //console.log(st.nom, d);
-                    return d < 1500;
-                }
-                remplirStations(fFilter, fSort);
+                btnGeoloc.classList.add("active");
+                remplirStations();
             });
         }
         else {
@@ -63,13 +62,7 @@ document.addEventListener("DOMContentLoaded", function (_e) {
         return d;
     }
         
-    
-    // Erreur récupération des horaires --> à améliorer pour gérer le mode OFFLINE
-    function erreurHoraires() {
-        alert("Connexion au serveur impossible.");
-        document.body.classList.remove("fade");
-    }
-    
+        
     
     
     /******************************************************************
@@ -180,6 +173,7 @@ document.addEventListener("DOMContentLoaded", function (_e) {
             // effacer l'éventuelle sélection 
             document.querySelector('#bcStations input[type="text"]').value = "";
             // mise à jour de la liste
+            fFilter = null;
             remplirStations();
             var id = target.parentElement.dataset.station;
             // sélectionne les stations
@@ -319,7 +313,7 @@ document.addEventListener("DOMContentLoaded", function (_e) {
     
     
     // URL où aller chercher les infos
-    let URL = "https://ginkobus-pwa.herokuapp.com"; //"http://localhost:8080";
+    let URL = "https://ginkobus-pwa.herokuapp.com"; 
 
     // Ensemble de stations { id -> { nom, latitude, longitude, ... } }
     var stations = {};
@@ -335,7 +329,7 @@ document.addEventListener("DOMContentLoaded", function (_e) {
     /** 
      *  Initialisation avec des appels asynchrones
      */
-    async function init() {
+    (async function init() {
 
         document.querySelector("#bcStart p").innerHTML = "Chargement des lignes...";
                 
@@ -345,9 +339,8 @@ document.addEventListener("DOMContentLoaded", function (_e) {
             alert("Impossible de charger les lignes.");
             return;
         }
-        // lecture du JSON
+        // lecture du JSON et affichage 
         lignes = await response.json();
-        // récupération et tri des lignes pour affichage
         afficherLignes();
 
         document.querySelector("#bcStart p").innerHTML = "Chargement des stations...";
@@ -358,23 +351,20 @@ document.addEventListener("DOMContentLoaded", function (_e) {
             alert("Impossible de charger les stations.");
             return;
         }
-        // lecture du JSON
+        // lecture du JSON et affichage 
         stations = await response.json();
-        // 
-        var stats = Object.values(stations).sort(function (e1, e2) {
-            return e1.id < e2.id ? -1 : 1;
-        });
-        afficherStations(stats);
+        afficherStations();
                         
         // fin du chargement
         document.querySelector("#bcStart h2").style.display = "block";
         document.querySelector("#bcStart p").innerHTML = "";
         favoris.refresh();
         
+        // si pas de favoris --> affichage des lignes
         if (Object.values(favoris.contenu).length == 0) {
             document.getElementById("radLignes").checked = true;
         }
-    }
+    })();
     
     
     
@@ -411,7 +401,7 @@ document.addEventListener("DOMContentLoaded", function (_e) {
     /**
      *  Affichage des stations dans le bloc #bcStations
      */
-    function afficherStations(stats) {
+    function afficherStations() {
         var header = document.createElement("header");
         var div = document.createElement("div");
         var input = document.createElement("input");
@@ -421,9 +411,10 @@ document.addEventListener("DOMContentLoaded", function (_e) {
         header.innerHTML = "Filtre : ";
         input.type = "text";
         input.addEventListener("keyup", function () {
-            remplirStations(function(st) { 
-                return st.nom.toLowerCase().indexOf(input.value.toLowerCase().trim()) >= 0; 
-            });
+            fFilter = function(st) { 
+                return st.nom.toLowerCase().indexOf(document.querySelector('#bcStations input[type="text"]').value.toLowerCase()) >= 0; 
+            };
+            remplirStations();
         });
         header.appendChild(input);
 
@@ -444,23 +435,45 @@ document.addEventListener("DOMContentLoaded", function (_e) {
     }
 
 
+    /************************************************************************* 
+            Fonctions utilisées pour remplir la liste des stations 
+    **************************************************************************/
+    
+    /** 
+     *  Détermine si la station id1 précède ou pas la station id2.
+     *  @param  String  id1     identifiant de station (ex. "st_battant")
+     *  @param  String  id2     identifiant de station (ex. "st_battant")
+     *  @return Number          < 0 si id1 précède id2, > 0 si id2 précède id1
+     */
+    var fSort = null;
+    
+    /** Détermine si la station passée en paramètre doit être affichée ou pas.
+     *  @param  Object  st      l'objet Station à évaluer
+     *  @return boolean         true si la station doit être affichée, false sinon
+     */
+    var fFilter = null;
+    
+    
     /** 
      *  Fonction permettant de remplir la liste des stations de #bcStations :
      *      - en les triant avec la fonction fSort et 
      *      - en les filtrant avec les résultats avec la fonction fFiltre
-     *  @param  function    fFiltre fonction de filtre d'une station (station => boolean)
-     *  @param  function    fSort   fonction de tri des identifiants de station (id1, id2) => int
      */
-    function remplirStations(fFilter, fSort) {
+    function remplirStations() {
         var r = "";
+        // si un tri existe alors on trie par ordre alphabétique, sinon on trie par ordre alphabetique
         var keys = fSort ? Object.keys(stations).sort(fSort) : Object.keys(stations).sort();
         for (var k in keys) {
             var station = stations[keys[k]];
-            var hidden = (!fFilter || fFilter(station)) ? "" : " style='display: none;'"
+            // s'il y a un filtre et que la station ne passe pas ce filtre 
+            if (fFilter && !fFilter(station)) {
+                continue;   // --> on passe directement à la suivante
+            }
             let id = "cb_" + station.id;
-            r += "<input type='checkbox' id='" + id + "'>";
-            r += "<label for='" + id + "' "+ hidden + ">" + station.nom + "</label>";
-            r += "<ul>";
+            r += "<input type='checkbox' id='" + id + "'>" +
+                    "<label for='" + id + "'>" + 
+                        station.nom + (station.distance ? " - " + station.distance + " km" : "") + 
+                    "</label><ul>";
             for (var l in station.lignes) {
                 for (var ll in station.lignes[l]) {
                     var fg = lignes[l].fg;
@@ -516,7 +529,7 @@ document.addEventListener("DOMContentLoaded", function (_e) {
             var horaires = await response.json();
             var keys = Object.keys(horaires);
             var nb = keys.length;
-            
+
             // retrait des 
             var divRadio = document.querySelector("aside header div:nth-of-type(2)");
             while (divRadio.firstChild) {
@@ -567,7 +580,7 @@ document.addEventListener("DOMContentLoaded", function (_e) {
                 html += "</table>";
                 aside.innerHTML = html;
                 selectionnerHoraires(0);
-            
+
                 // cas où une station était sélectionnée 
                 if (station) {
                     var sel = document.querySelector("aside tr.selected");
@@ -591,10 +604,13 @@ document.addEventListener("DOMContentLoaded", function (_e) {
             }
             aside.parentElement.classList.add("visible");
             document.body.classList.remove("fade");        
-        }, erreurHoraires);
+        }, function(error) {
+            // Erreur récupération des horaires --> pour gérer le mode OFFLINE
+            document.querySelector("aside .liste").innerHTML = 
+                "<p style='font-size: 200%;'>&#128244;</p><p>Impossible de récupérer les données depuis le serveur.</p>";
+            aside.parentElement.classList.add("visible");
+            document.body.classList.remove("fade");
+        });
     }
-
-    // Et c'est parti... !
-    init();
 
 });

@@ -398,14 +398,17 @@ nav label:before {
     float: right;
     font-size: 3vh;
     margin: 0;
-    margin-right: 1vh;
+    margin-right: 2vh;
     height: 4vh;
     width: 4vh;
     text-align: center;
     margin-top: 0vh;
     font-size : 4vh;
+    filter: grayscale(1);
 }
-
+#bcStations .btnGeoloc.active {
+    filter: grayscale(0);
+}
 
 #bcStations .liste label:nth-of-type(even),
 #bcHome .liste label:nth-of-type(even) {
@@ -459,7 +462,7 @@ li span.btnFavoris.favori:before {
     height: 93vh;
     width: 100vw;
 }
-#bcHome p {
+#bcHome p, aside p {
     text-align: center;
     padding: 1vw;    
     padding-top: 20%;

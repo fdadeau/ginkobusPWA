@@ -1,7 +1,7 @@
 {
     "name": "Ginkobus PWA",
     "short_name": "Ginkobus PWA",
-    "description": "Progressive Web App of Ginkobus .",
+    "description": "Progressive Web App of Ginkobus",
     "icons": [
         {
             "src": "icons/icon-32.png",
@@ -36,8 +36,13 @@
         {
             "src": "icons/icon-512.png",
             "sizes": "512x512",
-            "type": "image/png",
-            "purpose": "any maskable"
+            "type": "image/png"
+        }, 
+        {
+          "src": "icons/maskable_icon.png",
+          "sizes": "196x196",
+          "type": "image/png",
+          "purpose": "any maskable"
         }
     ],
     "start_url": "index.html",

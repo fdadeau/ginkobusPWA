@@ -81,15 +81,22 @@
 <p>Vous allez vous travailler dans ce TP avec une application web déjà réalisée, qui contient déjà toute la logique applicative
     et le rendu graphique. </p>
     
-<p>Cette application simule une <strong>scanette</strong> et illustre l'utilisation de l'appareil photo, qui servira à la 
-    lecture de code-barre de produits. </p>
+<p>Cette application est une interface de consultation des horaires de bus de Besançon. Elle s'appuie sur 
+    les données OpenData fournies par Ginko Mobilités et qui sont consultables à l'adresse : <a href="https://api.ginko.voyage" target="_blank">api.ginko.voyage</a>.</p>
     
-<p>Le fonctionnement de l'application est simple : l'utilisateur scanne des produits qui composent son panier. Une fois 
-    tous les produits scannés, il peut les transférer pour terminer ses achats. </p>
+<p>L'application permet de consulter les horaires de bus à une station, ou pour une ligne donnée. Il est possible d'enregistrer 
+    des stations (arrêt + ligne + direction) favorites pour accélérer les recherches. </p>
+    
+<p>NB. Pour simplifier, il n'y a pas de carte qui affiche les stations, mais sachez qu'il y a toutes les informations nécessaires
+    sur le site précédent pour afficher les stations, le tracé des lignes, etc. par exemple sur une carte OpenStreetMap. <br>
+    Libre à vous, si cela vous intéresse, de continuer ce TP comme un petit projet personnel pour manipuler un peu ces aspects
+    que nous n'aurons pas le temps de couvrir durant ces 3 heures. 
+</p>
 
+    
 <h3>Tour d'horizon de l'application</h3>    
 
-<p>L'application permet de simuler une scanette de supermarché. Il y a basiquement 4 écrans : </p>
+<p>L'application permet de visualiser les horaires de bus. Il y a basiquement 5 écrans : </p>
 
 <ol style="list-style-type: lower-alpha;">
     
@@ -101,36 +108,47 @@
     
     </li>
 
-    <li>L'écran du panier, depuis lequel est accessible la saisie des produits qui va s'appuyer sur 
-        l'utilisation de l'appareil photo du dispositif mobile pour analyser un code barre photographié 
-        par celui-ci. En sélectionnant une ligne de la liste, on peut également ajuster les quantités 
-        (notamment supprimer un produit en mettant sa quantité à 0). 
+    <li>L'écran des favoris, qui permet de visualiser les stations, lignes et directions qui ont été choisies
+        comme favorites par l'utilisateur. La petite étoile pleine en début de ligne signale le favori, elle 
+        permet de retirer la station des favoris, en appuyant dessus. 
     
         <figure>
-        <img src="images/sc-panier.png">
-        <img src="images/sc-photo.png">
-        <img src="images/sc-quantites.png">
+        <img src="images/sc-favoris0.png">
+        <img src="images/sc-favoris1.png">
         </figure>
     
     </li>
     
-    <li>L'écran de paramétrage qui permet à l'utilisateur de saisir les informations liées à son compte : 
-        le numéro de sa carte de fidélité, son email, son nom et son prénom. 
+    <li>L'écran des stations liste les stations existantes, et permet de filtrer celles-ci pour n'afficher que 
+        celles présentant la sous-chaîne actuellement saisie. <br>
+        En touchant la station, on peut visualiser les lignes qui s'y arrêtent. Pour chacune, en début de ligne, 
+        la petite étoile indique si la station ne fait pas partie des favoris (étoile pleine = favori, étoile vide = 
+        pas favori). Un appui sur celle-ci permet de changer son statut. <br>
+        Un appui sur une des directions déclenche l'affichage des horaires correspondants, centré sur la station 
+        choisie (voir écran <em>e</em> ci-dessous). 
 
         <figure>    
-        <img src="images/sc-compte.png">
+        <img src="images/sc-stations0.png">
+        <img src="images/sc-stations1.png">
+        <img src="images/sc-stations2.png">
         </figure>    
 
     </li>
 
-    <li>L'écran de transmission d'un panier non vide, si les infos de l'utilisateur sont correctement remplies, 
-    au serveur distant. Celui-ci envoie un réponse confirmant la bonne transmission du panier, ce qui aura pour 
-    conséquence de vider le panier de l'utilisateur.
+    <li>L'écran des lignes permet de visualiser les lignes qui parcourent la ville. <br>
+        Appuyer sur une ligne permet d'afficher les directions existantes pour la ligne considérée. <br>
+        Appuyer sur une de ces directions affiche les horaires de passage pour les différentes stations 
+        qui sont sur la ligne et la direction ainsi choisies. 
         <figure>
-        <img src="images/sc-transmission-vide.png">
-        <img src="images/sc-transmission.png">
-        <img src="images/sc-transmission-OK.png">
-        <img src="images/sc-transmission-KO.png">
+        <img src="images/sc-lignes0.png">
+        <img src="images/sc-lignes1.png">
+        </figure>    
+    </li>
+
+    <li>L'écran de visualisation des horaires permet de voir pour une date et une heure donnée les horaires de
+        passages aux différentes stations de la ligne considérée. 
+        <figure>
+        <img src="images/sc-horaires.png">
         </figure>    
     </li>
     
@@ -140,23 +158,47 @@
 <p>Quelques points à remarquer : </p>
 
 <ul>
-    <li>la reconnaissance de code-barre à partir d'une photo est faite par l'intermédiaire d'une bibliothèque 
-        (objet nommé "JOB" dans le code) qui prend une image et renvoie les codes-barre qui existent dans celle-ci. 
-
+    <li>
+        L'API de Ginko Mobilités se présente soit sous la forme d'une 
+        <a href="https://api.ginko.voyage/#apilowlevel" target="_blank">API REST</a> ou d'un ensemble de 
+        <a href="https://api.ginko.voyage/#prez" target="_blank">fichiers au format GTFS</a> 
+        (<a href="https://developers.google.com/transit?hl=fr" target="_blank">Google Transit Feed Specification</a>).
+        Si ce sont les données de l'API Ginko Mobilités qui sont utilisées, celles-ci sont servies par un web service
+        indépendant, les informations disponibles via l'API REST existante ne permettant pas d'obtenir simplement 
+        les données utiles pour notre application. 
     </li>
     
-    <li>la liste des produits connus et reconnus est donnée dans le fichier CSV "produits.csv" situé à la racine 
-        de l'application et qui décrit sur chaque ligne : le code EAN, le libellé du projet et son prix unitaire en euros.
+    <li>L'API utilisée dans ce TP est donc une API REST <em>ad hoc</em>, hébergée sur la plateforme 
+        <a href="https://heroku.com" target="_blank">Heroku</a>, à l'adresse <code>https://ginkobus-pwa.herokuapp.com</code>.<br>
+        Les routes de cette API sont les suivantes, chacune d'elle renvoie des données au format JSON dont le format est donné
+        par les exemples associés : 
+        <ul>
+            <li><code>/stations</code> : liste toutes les stations en donnant notamment leur nom, leurs coodonnées GPS, et les lignes
+                qui passent à ces stations. <br>
+                Exemple : <a href="https://ginkobus-pwa.herokuapp.com/stations" target="_blank">https://ginkobus-pwa.herokuapp.com/stations</a>
+            </li>
+            <li><code>/lignes</code> : liste les lignes existantes en donnant le nom, les couleurs pour l'affichage, les 
+                directions existantes, etc. <br>
+                Exemple : <a href="https://ginkobus-pwa.herokuapp.com/lignes" target="_blank">https://ginkobus-pwa.herokuapp.com/lignes</a>
+            </li>
+            <li><code>/circuits</code> : liste les circuits existants pour permettre leur affichage sur une carte ; ces circuits sont 
+                référencés dans les descriptions des lignes (mais ils ne sont pas utilisés dans cette application). <br>
+                Exemple : <a href="https://ginkobus-pwa.herokuapp.com/circuits" target="_blank">https://ginkobus-pwa.herokuapp.com/circuits</a>
+            </li>
+            <li><code>/horaires/:ligne/:direction/:date/:heure</code> : liste les passages pour une ligne donnée, dans une 
+                direction donnée, à une date et une heure donnée. <br>
+                Exemple : <a href="https://ginkobus-pwa.herokuapp.com/horaires/3/0/20201120/12" target="_blank">https://ginkobus-pwa.herokuapp.com/horaires/3/0/20201120/12</a> donne les trajets et horaires de la ligne <code>3</code> dans 
+                la direction <code>0</code> à la date du <code>20 novembre 2020</code> (au format AAAAMMJJ) autour de <code>12h</code>.
+            </li>
+        </ul>
+        Ces informations sont uniquement données pour vous aider à comprendre sur quoi s'appuie l'application. Vous n'aurez
+        normalement pas à les utiliser. 
     </li>
     
-    <li>les données personnelles et le panier de l'utilisateur sont sauvegardés à chaque modification dans le stockage 
-        local du navigateur. Ainsi les achats/infos déjà enregistrées sont toujours présentes à la visite suivante.
+    <li>Les stations favorites sont sauvegardées à chaque modification dans le stockage 
+        local du navigateur. Ainsi les favoris enregistrés sont toujours présents à la visite suivante.
     </li>
     
-    <li>la transmission des achats va envoyer les données à un serveur distant. Cette action ne peut se réaliser que 
-        si l'appareil sur laquelle est exécutée l'application est connecté à internet. <br>
-        Cette dernière étape n'est pour l'instant pas codée dans l'application, ce sera à vous de la réaliser en fin de TP.     
-    </li>
 </ul>
 
     
@@ -202,14 +244,7 @@
         </div>
     </li>
 </ul>
-    
-<p>Pour tester l'application, vous pouvez récupérer les deux images ci-dessous, qui représentent les deux codes-barres
-    déjà présents dans la liste de produits. </p>
-    
-<p style="text-align: center;">
-    <img src="images/__barcode-example.png" style="display: inline-block;">
-    <img src="images/__barcode-mouchoirs.png" style="display: inline-block;"></p>
-    
+        
 </section>
                   
 <input type="radio" id="rad3" name="radsection">
@@ -269,13 +304,16 @@
     </p>
 
     <p>Bien évidemment, vous n'aurez pas à faire cet audit à la main, c'est l'outil LightHouse qui le fera 
-    pour vous. </p>
+    pour vous. Dans les outils développeur de Google Chrome, allez à l'onglet "Lighthouse" et lancez un 
+    audit "Progressive Web App" comme illustré ci-dessous (vous pouvez décocher toutes les autres catégories). </p>
+    
+<img src="images/audit0.png" style="width: 40%;" class="figure">
     
     <p>Lancer l'audit de l'application hébergée pour une PWA. Deux points cruciaux devraient manquer : </p>
     <ul>
-        <li>l'existence d'un manifeste pour déclarer l'application comme utilisable hors du navigateur, 
+        <li>l'existence d'un fichier <strong>manifest</strong> pour déclarer l'application comme utilisable hors du navigateur, 
             comme une web app installable sur votre appareil </li>
-        <li>la mise en place d'un Service Worker qui va permettre d'utiliser l'application hors ligne en 
+        <li>la mise en place d'un <strong>Service Worker</strong> qui va permettre d'utiliser l'application hors ligne en 
             mettant en cache une partie des ressources nécessaires, et en redirigeant vers le cache les 
             requêtes HTTP qui seraient faites alors que l'appareil est hors-ligne. </li>
     </ul>
@@ -365,8 +403,8 @@ créez un fichier manifest pour l'application, que vous n'oublierez pas d'inclur
 
 <p>Vous pouvez utiliser la stratégie proposée dans ce document qui consiste, à l'installation, à mettre en cache 
     toutes les données listées comme ressources, et à consulter ensuite ce cache en priorité (et sinon, aller 
-    chercher la ressource sur le réseau). Cette stratégie a pour avantage de permettre un chargement très rapide
-    des données déjà en cache. 
+    chercher la ressource sur le réseau et la mettre en cache). 
+    Cette stratégie a pour avantage de permettre un chargement très rapide des données déjà en cache. 
 </p>    
 
 <p>Pour l'instant, c'est la stratégie que nous allons utiliser. </p>
@@ -389,7 +427,7 @@ créez un fichier manifest pour l'application, que vous n'oublierez pas d'inclur
     <p>Vérifiez dans la partie "Application", "Cache Storage" que les fichiers que vous avez décrits ont 
         correctement été mis en cache. </p>
 
-    <img src="images/cache-storage.png" class="figure">
+    <img src="images/cache-storage.png" class="figure" style="width: 60%;">
 
     <p>Reprenez l'application sur votre téléphone et relancez-la. Les données doivent être mises en cache. <br>
         Quittez l'application, mettez l'appareil en mode avion, et relancez l'application. Vous devriez pouvoir 
@@ -409,61 +447,68 @@ créez un fichier manifest pour l'application, que vous n'oublierez pas d'inclur
         et piocher ensuite dans le cache en priorité. Si une donnée n'est pas présente, alors celle-ci est 
         récupérée sur le réseau et elle-même ajoutée au cache. </p>
     
-    <p>Si l'application n'a pas vocation à évoluer ou si elle s'appuie sur des données statiques, c'est une 
-        option viable. Mais si l'application peut être amenée à voir ses données applicatives évoluer, 
-        il ne sera pas possible de faire évoluer celles-ci sans remettre toute l'application en cache, 
-        ce qui n'offre pas une grande souplesse. De même, si l'application dépend de ressources externes, 
-        ces dernières ne devraient pas être mises en cache. </p>
-    
-    <p>Pour notre scanette, nous aimerions pouvoir faire évoluer certains éléments de l'application, 
-        comme par exemple la liste des produits, sans devoir réinstaller systématiquement toute l'application. </p>
-    
-    <p>Par ailleurs, l'application va s'appuyer sur un serveur externe pour transmettre le panier. 
-        Il n'est donc pas question de mettre en cache la réponse de ce serveur, sinon elle sera 
-        toujours la même ! Et accessoirement, les données ne seront jamais transmises au serveur 
-        distant !</p>
-    
-    <p>Pour pallier ce problème, nous allons implanter une stratégie ad hoc de service de contenu. Celle-ci 
-    s'appuiera sur deux listes : </p>
+    <p>On remarquera que deux types de données sont ainsi mises en cache : </p>
     
     <ul>
-        <li>La liste de ressources mises en cache. On ne mettra que ces éléments en cache, en vue d'une 
-            utilisation hors-ligne. Cette liste correspond à la liste de ressources déjà définie à l'étape
-            précédente. </li>
-        <li>Une liste de ressources "modifiables", qui seront prioritairement récupérées sur le réseau 
-            (et mises en cache à cette occasion) :
+        <li>les ressources de l'application : fichiers HTML, CSS, scripts JS, icones</li>
+        <li>les réponses aux requêtes envoyées au serveur distant pour connaître les stations, les lignes et les horaires
+        </li>
+    </ul>
+    
+    <p>Dans l'absolu, si l'application n'a pas vocation à évoluer ou si elle s'appuie sur des données statiques, 
+        c'est une option viable. Mais si l'application peut être amenée à voir ses données évoluer, 
+        il ne sera pas possible de faire évoluer celles-ci sans remettre toute l'application en cache, 
+        ce qui n'offre pas une grande souplesse. De même, si l'application dépend de ressources externes, 
+        ces dernières ne devraient pas être issues en priorité du cache, car leurs évolutions seront de ce
+        fait invisibles. </p>
+    
+    <p>Pour notre application, s'il est probable que l'interface homme-machine a proprement parler n'évolue
+        pas, il est possible que les lignes ou les arrêts évoluent (certes pas toujours, mais bon...). </p>
+    
+    <p>Il est par contre certain que les horaires vont évoluer, car ceux-ci sont réactualisés tous les 3 mois. 
+    La consultation des horaires est donc typiquement le genre de demande qui ne doit être issue du cache 
+    que si l'application est hors-ligne. En revanche, si une connexion est disponible, cette ressource 
+    doit être récupérée via le réseau. </p>
+       
+    
+    <p>Pour pallier ce problème, nous allons implanter une stratégie ad hoc de service de contenu. </p>
+    
+    <ul>
+        <li>Les fichiers structurels de l'application (code HTML, CSS, icônes) sont mis en cache à 
+            l'installation et récupérés depuis le cache (stratégie <em>Cache only</em>). </li>
+        <li>Le script de l'application, les listes de stations, des lignes de bus et les horaires seront 
+            prioritairement récupérées sur 
+            le réseau et mises en cache à cette occasion (strategie <em>On network response</em>) :
             <img src="images/cache4.png" class="figure" style="width: 40%;">
             ou, à défaut, reprises du cache si le réseau n'est pas disponible : 
             <img src="images/cache1.png" class="figure" style="width: 40%;">
         </li>
+        <li>Il est possible que les horaires demandés n'existent pas dans le cache. Dans ce cas, pas de 
+            soucis, l'application affiche normalement un message indiquant que le réseau est inaccessible dans
+            l'écran des horaires. <br>
+            NB. Une stratégie (mais que l'on implémentera pas ici) pourrait être que le
+            service worker renvoie une réponse propre indiquant que les horaires ne sont pas disponibles, 
+            ce qui sera affiché dans l'interface (le schéma montre une ressource piochée dans le cache, 
+            mais il est aussi possible de générer la réponse directement depuis le Service Worker) 
+            (stratégie <em>Generic fallback</em>).            
+            <img src="images/cache5.png" class="figure" style="width: 40%;">
+        </li>
     </ul>
     
-    <p>Modifiez le code associé à l'événement <code>fetch</code> pour faire en sorte que : </p>
-    
-    <ul>
-        <li>si le fichier est l'un des 4 fichiers <code>index.html</code>, <code>styles.css</code>, <code>app.js</code> 
-            et <code>produits.csv</code>, alors on ira en priorité les chercher sur le réseau et, ce faisant, 
-            on mettra à jour le cache pour toujours avoir la dernière version de ces fichiers. 
-            Si le site n'est pas accessible, alors on ira chercher dans le cache la version précédemment 
-            enregistrée de cette ressource. </li>
-        <li>si le fichier n'appartient pas à la liste ci-dessus, alors on ira le chercher dans le cache, 
-            et à défaut (si ce n'est pas un fichier de l'application) on va le chercher sur internet, 
-            mais on ne le met pas en cache. </li>
-    </ul>
-
-    <p>Mettez en ligne l'application et testez sa bonne exécution (instrumentez le code pour faire apparaître
-    les messages dans la console indiquant d'où les fichiers demandés sont récupérés). </p>
-    
-    <p>Testez si l'application se comporte correctement, en modifiant entre deux exécution de l'application 
-    la liste de produits pour rendre reconnu un article dont le code n'était précédemment pas dans la liste 
-    de produits. </p>
-    
-    <p>Si ça fonctionne, vous êtes un boss. Félicitez-vous. </p>
-    
-    <p>Pour ceux qui sont intéressés pour aller plus loin, vous trouverez à cette adresse une liste des 
+    <p>Vous trouverez à cette adresse une liste assez exhaustive des 
         différentes stratégies possibles pour la gestion des ressources hors-ligne : 
-    <a class="dont" href="https://developers.google.com/web/fundamentals/instant-and-offline/offline-cookbook/">https://developers.google.com/web/fundamentals/instant-and-offline/offline-cookbook/</a>
+        <a class="dont" href="https://developers.google.com/web/fundamentals/instant-and-offline/offline-cookbook/">https://developers.google.com/web/fundamentals/instant-and-offline/offline-cookbook/</a>
     </p>
+    
+    <p>Modifiez le code associé à l'événement <code>fetch</code> pour faire en sorte de vérifier le 
+    fichier qui est demandé (en allant contrôler la valeur présente dans <code>evt.request.url</code>)
+    pour aiguiller la demande vers la source appropriée. </p>
+
+    <p>Mettez en ligne l'application et testez sa bonne exécution (vous pouvez instrumenter le code pour 
+        faire apparaître les messages dans la console indiquant d'où les fichiers demandés sont récupérés). 
+    </p>
+    
+    <p>Si tout fonctionne, vous êtes un boss. Félicitez-vous. </p>
     
 </section>
     
@@ -471,42 +516,32 @@ créez un fichier manifest pour l'application, que vous n'oublierez pas d'inclur
 <input type="radio" id="rad8" name="radsection">    
 <section id="8">
 
-<h2>Modifiez l'application pour transmettre le panier au serveur distant</h2> 
+<h2>Les plus observateurs d'entre vous auront sûrement repéré la présence d'une petite punaise grisée 
+    à côté du filtre. Cette punaise est un bouton qui a pour objectif de trier les stations pour les 
+    afficher en fonction de leur distance à la position courante de l'utilisateur.
+</h2> 
 
-<p>Pour ceux qui veulent s'amuser un peu, vous pouvez compléter le dernier écran de l'application qui envoie 
-    les données au serveur. </p>
-
-    <p>Pour rappel, voici les écrans qu'il faut obtenir : </p>
+    <p>Le but de cette dernière partie est d'utiliser la 
+        <a href="https://fdadeau.github.io/CoursJS/html/chap2-JS-client.html#102" target="_blank">géolocalisation 
+    de l'appareil</a> pour effectuer un tri des stations. </p>
+    
+    <p>Toutes les coordonnées étant exprimées sous la forme de latitudes et de longitudes, il sera nécessaire 
+    de réaliser un calcul de distance orthdromique entre deux points GPS. Don't Panic! La formule et le code 
+    Javascript correspondant vous sont donnés 
+        <a href="https://www.movable-type.co.uk/scripts/latlong.html" target="_blank">sur ce site</a>.
+    </p>
+    
+    <p>Une fois la géolocalisation en place, le tri par distance se rajoute au filtre déjà existant. 
+    La puce en couleur indique que ce tri est actif. Rappuyer sur la punaise désactive ce tri (les 
+    stations sont à nouveau triés par ordre alphabétique) et la punaise redevient grisée. </p>
     
      <figure>
-        <img src="images/sc-transmission-vide.png">
-        <img src="images/sc-transmission-userdata.png">
-        <img src="images/sc-transmission.png">
-        <img src="images/sc-transmission-OK.png">
-        <img src="images/sc-transmission-KO.png">
-        </figure>    
+        <img src="images/sc-geolocation.png">
+    </figure>    
     
-    <p>Il vous faudra forger une requête POST qui enverra les paramètres suivants : </p>
-    
-    <ul>
-        <li>un couple <code>client=<i>numero</i></code> où <code><i>numero</i></code> désigne la valeur de la carte de 
-            fidélité du client, saisie dans l'écran du compte utilisateur.</li>
-        <li>pour chaque produit, un couple <code><i>EAN</i>=<i>quantité</i></code> où <code><i>EAN</i></code> 
-            est le code EAN 
-            du produit acheté, et <code><i>quantité</i></code> exprime le nombre d'unités de ce produit 
-            qui a été acheté.  </li>
-    </ul>
-    
-    <p>L'URL à laquelle la requête sera envoyée est donnée dans la constante URL_TRANSMISSION qui a pour valeur 
-    <code>https://dept-info.univ-fcomte.fr/licence/SAMP/</code></p>
-    
-    <p>Le serveur renverra un objet JSON contenant un champ <code>status</code> qui sera égal à <code>ok</code> 
-        si la requête était correctement formulée ou <code>ko</code> sinon. En cas de réponse positive, un champ 
-        <code>basket</code> contenant les produits achetés selon le même format qu'à l'envoi sera adjoint à la réponse. 
-    </p>
-
-    <p>Cette requête ne devra être envoyée que si, d'abord, le panier n'est pas vide, et si, ensuite, les 
-        informations du client sont bien toutes renseignées et valides. </p>
+    <p>Et pour les courageux, vous pouvez intégrer 
+        une <a href="https://fdadeau.github.io/CoursJS/html/chap2-JS-client.html#106" target="_blank">carte OpenStreetMap</a>...
+    et aller postuler pour un job au service informatique de Ginko Mobilités, pour retrouver nos anciens étudiants &#x1F600;</p>
     
 </section>    
     

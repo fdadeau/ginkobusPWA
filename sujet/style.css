@@ -1,0 +1,293 @@
+body {
+    font-family: Helevetica, Palatino, Verdana;
+    font-size: 16px;
+    line-height: 1.5;
+    padding: 0;
+    margin: 0;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+main {
+    background-color: #FFF;
+    width: 100%;
+    margin: 0px auto;
+    padding: 15px;
+}
+
+.figure {
+    display: block;
+    margin: 10px auto;
+    width: 80%;
+    max-width: 800px;
+}
+
+
+header {
+    margin: -15px -15px 10px -15px;
+    padding: 10px;
+    text-align: center;   
+    background-color: #7777FF;
+    border-bottom: solid 2px #000;
+    }
+
+h1 {
+    font-size: 24px;
+    font-weight: bold;
+    color: #FFF;
+    line-height: 1.9;
+    text-shadow: 2px 2px 0.2em black;
+}
+
+.pluspetit {
+    display:block;
+    font-size: 20px;   
+}
+
+h2 {
+	color: #333;
+	font-weight: bold;
+	font-size: 18px;
+	margin: 10px 0px 20px 0px;
+	background: #F7E0A5;
+	padding: 4px;
+	clear: both;
+	border-left: 2em solid #F7C749;
+	}
+
+h3 {
+    margin-top: 30px;
+    font-size: 16px;
+    font-weight: bold;
+    border-bottom: 2px solid #FFCC33;
+}
+
+h4 {
+    margin-top: 25px;
+    font-size: 16px;
+    font-weight: bold;
+    border-top: 2px solid #000;
+}
+
+p {
+    text-align: justify;
+}
+
+li {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+pre {
+    font-size: 14px;
+}
+
+code {
+    font-size: 95%;
+    color: #BB0000;
+    font-weight: bold;
+}
+
+a:link,
+a:visited,
+label {
+    text-decoration: none;
+    color: #0000FF;
+}
+
+a:hover {
+    text-decoration: underline;
+    color: #0000FF;
+}
+
+a[href^="http"]:hover:not(.dont):after {
+    content: " - " attr(href);
+}
+
+
+.important {
+    color: #BB0000;
+    border: solid 1px #BB0000;
+    margin: 10px 20px;
+    padding: 10px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.grammaire {
+    width: 420px;
+    margin-bottom: 10px;
+}
+
+.grammaire td:first-of-type {
+    text-align: right;
+}
+
+.grammaire td:nth-of-type(2) {
+    text-align: center;
+}
+
+.terminal {
+    background-color: black;
+    font-family: courier new;
+    font-size: 14px;
+    color: lightgreen;
+    padding: 5px;
+    text-align: left;
+    width: 60%;
+}
+
+input[type=checkbox] {
+    display: none;
+}
+
+label {
+    width: auto;
+    display: block;
+}
+
+label:hover {
+    cursor: pointer;
+}
+
+input[type=checkbox] + div {
+    display: none;
+    border: solid 1px #000;
+    background-color: #FFFFEE;
+    padding: 10px;
+    width: 80%;
+}
+
+input[type=checkbox]:checked + div {
+    display: block;
+}
+
+.codesource {
+    display: block;
+    font-family: monospace;
+    white-space: pre;
+    margin: 1em auto;
+    border: solid 1px #000;
+    padding: 10px;
+    font-size: 90%;
+    max-width: 800px;
+}
+
+.codesource b {
+    color: blue;
+}
+
+.comments {
+    color: green;
+}
+
+
+figure {
+    display: block;
+    position: relative;
+    margin: 10px auto 20px auto;
+}
+
+figure img {
+    display: inline-block;
+    width: 13vw;
+    height: auto;
+    border-top: solid 2.5vw #222;
+    border-bottom: solid 3.5vw #222;
+    border-left: solid 0.3vw #222;
+    border-right: solid 0.3vw #222;
+    border-radius: 1.5vw;
+    margin: 0 20px;
+}
+
+
+section {
+    padding-top: 10px;
+    width: calc(100% - 250px);
+    margin: 0px 0 20px auto; 
+    display: none;
+    position: relative;
+}
+
+section:before {
+    content: attr(id);
+    position: absolute;
+    left: 14px;
+    top: 26px;
+    font-weight: bold;
+}
+
+nav {
+    counter-reset: link;
+    position: fixed;    
+    left: 1vw;
+    margin: 20px 0;
+    width: 240px;
+    border: none;
+}
+
+nav label {
+    counter-increment: link;
+    display: block;
+    padding: 1vw 0;
+    color: grey;
+    text-decoration: none !important;
+	background: #F7E0A5;
+}
+nav label:before {
+    content: counter(link) '.';
+    padding: 3px; 
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+section p {
+    padding: 0 10px;   
+}
+
+input[type="radio"] {
+    position: absolute; 
+    display: none;
+}
+input[type="radio"]:checked + section {
+    display: block;   
+}
+
+#rad1:checked ~ nav label:nth-child(n+2),
+#rad2:checked ~ nav label:nth-child(n+3),
+#rad3:checked ~ nav label:nth-child(n+4),
+#rad4:checked ~ nav label:nth-child(n+5),
+#rad5:checked ~ nav label:nth-child(n+6),
+#rad6:checked ~ nav label:nth-child(n+7),
+#rad7:checked ~ nav label:nth-child(n+8) {
+    color: black;   
+}
+
+#rad1:checked ~ nav label:nth-child(1),
+#rad2:checked ~ nav label:nth-child(2),
+#rad3:checked ~ nav label:nth-child(3),
+#rad4:checked ~ nav label:nth-child(4),
+#rad5:checked ~ nav label:nth-child(5),
+#rad6:checked ~ nav label:nth-child(6),
+#rad7:checked ~ nav label:nth-child(7),
+#rad8:checked ~ nav label:nth-child(8) {
+    color: black;
+    font-weight: bold;
+    background-color: #F7C749;
+}
+
+#rad1:checked ~ nav label:nth-child(1):before,
+#rad2:checked ~ nav label:nth-child(2):before,
+#rad3:checked ~ nav label:nth-child(3):before,
+#rad4:checked ~ nav label:nth-child(4):before,
+#rad5:checked ~ nav label:nth-child(5):before,
+#rad6:checked ~ nav label:nth-child(6):before,
+#rad7:checked ~ nav label:nth-child(7):before,
+#rad8:checked ~ nav label:nth-child(8):before {
+    content: '\02630';
+    margin-left: 10px; 
+}
+
+
