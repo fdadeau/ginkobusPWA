@@ -14,7 +14,6 @@ document.addEventListener("DOMContentLoaded", function (_e) {
     
     // Fonction exécutée quand on clique sur l'icône de géolocalisation 
     function geoloc() {
-        //alert("TODO géolocalisation");
         if ("geolocation" in navigator) {
             var btnGeoloc = document.querySelector("#bcStations .btnGeoloc");
             if (btnGeoloc.classList.contains("active")) {

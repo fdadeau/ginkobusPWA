@@ -526,32 +526,55 @@ créez un fichier manifest pour l'application, que vous n'oublierez pas d'inclur
 <input type="radio" id="rad8" name="radsection">    
 <section id="8">
 
-<h2>Les plus observateurs d'entre vous auront sûrement repéré la présence d'une petite punaise grisée 
+    <h2>Ajout d'une fonctionnalité : géolocalisation</h2>
+    
+<p>Les plus observateurs d'entre vous auront sûrement repéré la présence d'une petite punaise grisée 
     à côté du filtre. Cette punaise est un bouton qui a pour objectif de trier les stations pour les 
     afficher en fonction de leur distance à la position courante de l'utilisateur.
-</h2> 
+</p> 
 
     <p>Le but de cette dernière partie est d'utiliser la 
         <a href="https://fdadeau.github.io/CoursJS/html/chap2-JS-client.html#102" target="_blank">géolocalisation 
     de l'appareil</a> pour effectuer un tri des stations. </p>
     
     <p>Toutes les coordonnées étant exprimées sous la forme de latitudes et de longitudes, il sera nécessaire 
-    de réaliser un calcul de distance orthdromique entre deux points GPS. Don't Panic! La formule et le code 
-    Javascript correspondant vous sont donnés 
+    de réaliser un calcul de <a href="https://fr.wikipedia.org/wiki/Orthodromie" target="_blank">distance orthodromique 
+        entre deux points GPS</a>. <em>Don't Panic!</em> La formule et le code Javascript correspondant vous sont donnés 
         <a href="https://www.movable-type.co.uk/scripts/latlong.html" target="_blank">sur ce site</a>.
     </p>
     
     <p>Une fois la géolocalisation en place, le tri par distance se rajoute au filtre déjà existant. 
-    La puce en couleur indique que ce tri est actif. Rappuyer sur la punaise désactive ce tri (les 
+    La punaise en couleur indique que ce tri est actif (appliquer la classe <code>active</code> sur 
+        l'élément HTML considéré). Rappuyer sur la punaise désactive ce tri (les 
     stations sont à nouveau triés par ordre alphabétique) et la punaise redevient grisée. </p>
+    
+    <p>Indication technique : en fouillant un peu le code, autour de la ligne 400 du script <code>app.js</code>,
+    vous trouverez une fonction nommée <code>remplirStations</code> qui permet de générer le contenu de la liste
+    de stations. Cette fonction s'appuie sur une variable <code>fSort</code> qui, si elle est non vide, doit être 
+    une fonction permettant de
+    déterminer le critère de classement qui s'applique sur les stations (les paramètres sont deux identifiants 
+    de station). <br>
+    Le travail de cette partie consistera donc à instancier (ou réinitialiser) la variable <code>fSort</code> 
+    et appeler la fonction <code>remplirStations()</code> pour rafraîchir l'affchage. <br>
+    Par ailleurs, si vous examinez le code de cette dernière fonction, vous verrez aussi qu'il est possible 
+        d'ajouter un champ <code>distance</code> aux stations pour symboliser leur distance à la position GPS
+        courante. 
+    </p>
     
      <figure>
         <img src="images/sc-geolocation.png">
     </figure>    
     
     <p>Et pour les courageux, vous pouvez intégrer 
-        une <a href="https://fdadeau.github.io/CoursJS/html/chap2-JS-client.html#106" target="_blank">carte OpenStreetMap</a>...
+        une <a href="https://fdadeau.github.io/CoursJS/html/chap2-JS-client.html#106" target="_blank">carte OpenStreetMap</a> 
+        pour visualiser les tracés des lignes et les stations...
     et aller postuler pour un job au service informatique de Ginko Mobilités, pour retrouver nos anciens étudiants &#x1F600;</p>
+    
+     <figure>
+        <img src="images/sc-carte0.png">
+        <img src="images/sc-carte1.png">
+    </figure>    
+    
     
 </section>    
     

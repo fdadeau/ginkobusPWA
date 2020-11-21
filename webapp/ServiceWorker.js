@@ -35,6 +35,7 @@ self.addEventListener('install', function(e) {
 
 
 self.addEventListener('fetch', (e) => {
+   
     // Stratégie initiale : cache ou network avec mise en cache
     false && e.respondWith(
         caches.match(e.request).then((r) => {
