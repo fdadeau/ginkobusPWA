@@ -504,6 +504,16 @@ créez un fichier manifest pour l'application, que vous n'oublierez pas d'inclur
     fichier qui est demandé (en allant contrôler la valeur présente dans <code>evt.request.url</code>)
     pour aiguiller la demande vers la source appropriée. </p>
 
+    <p>Si vous devez faire plusieurs essais, et il est plus que probable que ce soit le cas, n'hésitez pas 
+    à aller dans l'onglet "Application", à vider le "Cache storage" (dans le menu à gauche), et à désinscrire 
+    le service worker (lien "unregister" à droite) avant de recharger votre application. Cela permettra de 
+    repartir d'une base saine, et évitera les éventuels fichiers qui s'exécutent depuis le cache au lieu de
+    considérer les fichiers que vous venez de modifier. <br>
+        Ce panneau présente également un bouton "Offline" qui permet de simuler la mise hors-ligne de l'application. 
+    </p>
+
+    <img src="images/cache-unregister.png" class="figure">
+    
     <p>Mettez en ligne l'application et testez sa bonne exécution (vous pouvez instrumenter le code pour 
         faire apparaître les messages dans la console indiquant d'où les fichiers demandés sont récupérés). 
     </p>
