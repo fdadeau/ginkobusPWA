@@ -14,17 +14,18 @@ Pour les plus rapides :
 
 ## Sujet du TP
 
-Le sujet du TP est disponible à l'adresse : [/sujet](./sujet/index.html){:target="_blank"}
+Le sujet du TP est disponible à l'adresse : [/sujet](./sujet/index.html)
 
 On s'intéresse dans celui-ci à une application Ginkobus qui permet de consulter les horaires de bus de la ville de Besançon, à partir des données ouvertes proposées par Ginko Mobilités (disponibles à l'adresse [https://api.ginko.voyage](https://api.ginko.voyage)).
 
 ## Corrigé du TP
-L'application finale est disponible dans le dossier [webapp](./webapp){:target="_blank"} du dépôt. 
+
+Le code de l'application finale est disponible dans le dossier [/webapp](./webapp) du dépôt. 
 
 Vous pouvez consulter :
-- le code du fichier manifest 
-- le code du service worker
+- le [fichier manifest](./webapp/ginkobusPWA.webmanifest)
+- le [service worker](./webapp/ServiceWorker.js)
 
 L'application étant hébergée sur Github, et servie en HTTPS, elle est normalement installable sur un appareil mobile récent. 
 
-[Lancer l'application](https://fdadeau.github.io/ginkobusPWA/){:target="_blank"}
+Sinon, vous pouvez tout simplement [lancer l'application](https://fdadeau.github.io/ginkobusPWA/).
