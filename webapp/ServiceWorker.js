@@ -37,7 +37,7 @@ self.addEventListener('install', function(e) {
 
 self.addEventListener('fetch', (e) => {
    
-    // Stratégie initiale : cache ou network avec mise en cache
+    // Stratégie initiale : cache ou network avec mise en cache (le "false &&" empêche son application) 
     false && e.respondWith(
         caches.match(e.request).then((r) => {
             console.log('[Service Worker] Fetching resource: '+e.request.url);
@@ -71,7 +71,7 @@ self.addEventListener('fetch', (e) => {
             .catch(function() { 
                 return caches.match(e.request).then((r) => {
                     console.log('[Service Worker] Looking for resource in cache: '+e.request.url);
-                    return r; // || new Response(JSON.stringify({ error: 1 }), { headers: { 'Content-Type': 'application/json' } }); 
+                    return r; // || new Response(JSON.stringify({ error: 1 }), { headers: { 'Content-Type': 'application/json' } }); <-- si on veut renvoyer un JSON indiquant l'erreur au lieu de laisser une erreur d'accès être capturée par l'application. 
                 })
             })
         );
