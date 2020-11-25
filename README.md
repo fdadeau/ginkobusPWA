@@ -28,4 +28,4 @@ Vous pouvez consulter :
 
 L'application étant hébergée sur Github, et servie en HTTPS, elle est normalement installable sur un appareil mobile récent. 
 
-Sinon, vous pouvez tout simplement [lancer l'application](https://fdadeau.github.io/ginkobusPWA/webapp/).
+Sinon, vous pouvez tout simplement [lancer l'application](https://fdadeau.github.io/ginkobusPWA/webapp/) (nécessite un appareil mobile pour être utilisée).
