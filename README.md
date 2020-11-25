@@ -23,8 +23,8 @@ On s'intéresse dans celui-ci à une application Ginkobus qui permet de consulte
 Le code de l'application finale est disponible dans le dossier [/webapp](./webapp) du dépôt. 
 
 Vous pouvez consulter :
-- le [fichier manifest](./webapp/ginkobusPWA.webmanifest)
-- le [service worker](./webapp/ServiceWorker.js)
+- le [fichier manifest](https://github.com/fdadeau/ginkobusPWA/blob/main/webapp/ginkobusPWA.webmanifest)
+- le [service worker](https://github.com/fdadeau/ginkobusPWA/blob/main/webapp/ServiceWorker.js)
 
 L'application étant hébergée sur Github, et servie en HTTPS, elle est normalement installable sur un appareil mobile récent. 
 
