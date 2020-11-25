@@ -14,7 +14,7 @@ Pour les plus rapides :
 
 ## Sujet du TP
 
-Le sujet du TP est disponible à l'adresse : [/sujet](https://fdadeau.github.io/ginkobusPWA/webapp/)
+Le sujet du TP est disponible à l'adresse : [/sujet](https://fdadeau.github.io/ginkobusPWA/sujet/)
 
 On s'intéresse dans celui-ci à une application Ginkobus qui permet de consulter les horaires de bus de la ville de Besançon, à partir des données ouvertes proposées par Ginko Mobilités (disponibles à l'adresse [https://api.ginko.voyage](https://api.ginko.voyage)).
 
