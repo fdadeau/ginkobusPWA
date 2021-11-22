@@ -555,12 +555,26 @@ document.addEventListener("DOMContentLoaded", function (_e) {
                 }
                 document.querySelector("aside header").appendChild(divRadio);
 
-                // tri par horaire de passage
+                // tri par horaire de passage                
                 keys = keys.sort(function (e1, e2) {
-                    var h1 = 1 * horaires[e1][0].horaire.substr(0, 2);
-                    var h2 = 1 * horaires[e2][0].horaire.substr(0, 2);
-                    var m1 = 1 * horaires[e1][0].horaire.substr(3, 2);
-                    var m2 = 1 * horaires[e2][0].horaire.substr(3, 2);
+                    var idx1 = 0;
+                    for (let i=0; i < horaires[e1].length; i++) {
+                        if (!horaires[e1][i].horaire.startsWith("--")) {
+                            idx1 = i;
+                            break;
+                        }
+                    }
+                    var idx2 = 0;
+                    for (let i=0; i < horaires[e2].length; i++) {
+                        if (!horaires[e2][i].horaire.startsWith("--")) {
+                            idx2 = i;
+                            break;
+                        }
+                    }
+                    var h1 = 1 * horaires[e1][idx1].horaire.substr(0, 2);
+                    var h2 = 1 * horaires[e2][idx2].horaire.substr(0, 2);
+                    var m1 = 1 * horaires[e1][idx1].horaire.substr(3, 2);
+                    var m2 = 1 * horaires[e2][idx2].horaire.substr(3, 2);
                     return (h1 < h2 || h1 == h2 && m1 < m2) ? -1 : 1;
                 });
                 var html = "<table>";
@@ -572,7 +586,7 @@ document.addEventListener("DOMContentLoaded", function (_e) {
                         "<td>" + stations[horaires[key0][t].arret].nom + "</td>";
                     var tab = [];
                     for (var h of keys) {
-                        tab.push(horaires[h][t].horaire);
+                        tab.push(horaires[h][t].horaire);    
                     }
                     html += "<td data-horaires='" + tab + "'></td></tr>";
                 }
