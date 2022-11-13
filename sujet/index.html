@@ -169,26 +169,26 @@
     </li>
     
     <li>L'API utilisée dans ce TP est donc une API REST <em>ad hoc</em>, hébergée sur la plateforme 
-        <a href="https://heroku.com" target="_blank">Heroku</a>, à l'adresse <code>https://ginkobus-pwa.herokuapp.com</code>.<br>
+        <a href="https://render.com" target="_blank">Render</a>, à l'adresse <code>https://ginkobus-server.onrender.com</code>.<br>
         Les routes de cette API sont les suivantes, chacune d'elle renvoie des données au format JSON dont le format est donné
         par les exemples associés : 
         <ul>
             <li><code>/stations</code> : liste toutes les stations en donnant notamment leur nom, leurs coodonnées GPS, et les lignes
                 qui passent à ces stations. <br>
-                Exemple : <a href="https://ginkobus-pwa.herokuapp.com/stations" target="_blank">https://ginkobus-pwa.herokuapp.com/stations</a>
+                Exemple : <a href="https://ginkobus-server.onrender.com/stations" target="_blank">https://ginkobus-server.onrender.com/stations</a>
             </li>
             <li><code>/lignes</code> : liste les lignes existantes en donnant le nom, les couleurs pour l'affichage, les 
                 directions existantes, etc. <br>
-                Exemple : <a href="https://ginkobus-pwa.herokuapp.com/lignes" target="_blank">https://ginkobus-pwa.herokuapp.com/lignes</a>
+                Exemple : <a href="https://ginkobus-server.onrender.com/lignes" target="_blank">https://ginkobus-server.onrender.com/lignes</a>
             </li>
             <li><code>/circuits</code> : liste les circuits existants pour permettre leur affichage sur une carte ; ces circuits sont 
                 référencés dans les descriptions des lignes (mais ils ne sont pas utilisés dans cette application). <br>
-                Exemple : <a href="https://ginkobus-pwa.herokuapp.com/circuits" target="_blank">https://ginkobus-pwa.herokuapp.com/circuits</a>
+                Exemple : <a href="https://ginkobus-server.onrender.com/circuits" target="_blank">https://ginkobus-server.onrender.com/circuits</a>
             </li>
             <li><code>/horaires/:ligne/:direction/:date/:heure</code> : liste les passages pour une ligne donnée, dans une 
                 direction donnée, à une date et une heure donnée. <br>
-                Exemple : <a href="https://ginkobus-pwa.herokuapp.com/horaires/3/0/20211123/12" target="_blank">https://ginkobus-pwa.herokuapp.com/horaires/3/0/20211123/12</a> donne les trajets et horaires de la ligne <code>3</code> dans 
-                la direction <code>0</code> à la date du <code>23 novembre 2021</code> (au format AAAAMMJJ) autour de <code>12h</code>.
+                Exemple : <a href="https://ginkobus-server.onrender.com/horaires/3/0/20221128/12" target="_blank">https://ginkobus-server.onrender.com/horaires/3/0/20221128/12</a> donne les trajets et horaires de la ligne <code>3</code> dans 
+                la direction <code>0</code> à la date du <code>28 novembre 2022</code> (au format AAAAMMJJ) autour de <code>12h</code>.
             </li>
         </ul>
         Ces informations sont uniquement données pour vous aider à comprendre sur quoi s'appuie l'application. Vous n'aurez
