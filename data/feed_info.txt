@@ -1,2 +1,0 @@
-feed_publisher_name,feed_publisher_url,feed_lang,feed_start_date,feed_end_date,feed_contact_email
-"Keolis Besançon Mobilités","https://www.ginko.voyage",FR,20220829,20221023,ginko.support-ssi@keolis.com

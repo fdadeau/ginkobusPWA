@@ -1,5 +1,8 @@
 "use strict";
 
+// URL où aller chercher les infos
+const URL = "https://ginkobus-server.onrender.com"; 
+
 /************************************************************************
  *                                                                      *
  *                  Ginko Bus Progressive Web Application               *
@@ -7,7 +10,6 @@
  ************************************************************************/
 document.addEventListener("DOMContentLoaded", function (_e) {
 
-    
     /******************************************************************
             Fonctions à compléter dans la dernière partie du TP 
     ******************************************************************/
@@ -311,9 +313,7 @@ document.addEventListener("DOMContentLoaded", function (_e) {
     };
     
     
-    // URL où aller chercher les infos
-    let URL = "https://ginkobus-pwa.herokuapp.com"; 
-
+    
     // Ensemble de stations { id -> { nom, latitude, longitude, ... } }
     var stations = {};
     // Ensemble de lignes 
