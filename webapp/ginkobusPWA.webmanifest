@@ -45,7 +45,7 @@
           "purpose": "maskable"
         }
     ],
-    "start_url": "/webapp/index.html",
+    "start_url": "index.html",
     "display": "fullscreen",
     "orientation": "portrait",
     "theme_color": "#000000",
