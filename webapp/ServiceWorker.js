@@ -56,7 +56,7 @@ self.addEventListener('fetch', (e) => {
     // Stratégie cache-only
     if (contentToCache.some(file => e.request.url.endsWith(file.substring(2)) && !e.request.url.endsWith("app.js"))) {
         console.log('[Service Worker] Loading from cache: '+e.request.url);
-        e.respondWith(caches.match(e.request));
+        caches.match(e.request).then(r => { e.respondWith(r); });
     }
     else {
         // Stratégie network + mise en cache, ou alors cache, ou réponse par défaut  
