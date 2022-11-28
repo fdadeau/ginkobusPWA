@@ -280,6 +280,9 @@ document.addEventListener("DOMContentLoaded", function (_e) {
          *  Rafraîchit la zone d'affichage des favoris.
          */
         refresh: function() {
+            if (!this.contenu) {
+                return;
+            }
             var tab = Object.keys(this.contenu).sort();
             if (tab.length == 0) {
                 document.querySelector("#bcHome").innerHTML = "<p>Pas de station favorite.</p>";

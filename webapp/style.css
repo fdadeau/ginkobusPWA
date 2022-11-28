@@ -384,7 +384,7 @@ nav label:before {
     display: block;
     font-size: 2.4vh;
     margin: 0 0 1vh 0;
-    padding: 0 0 1vh 2vh;
+    padding: 0 0 1vh 1vh;
     border-bottom: solid 0.3vh white;
 }
 
