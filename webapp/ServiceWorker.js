@@ -67,8 +67,7 @@ self.addEventListener('fetch', (e) => {
                     cache.put(e.request, response.clone());
                     return response;
                 });
-            })
-            .catch(function() { 
+            }, function() { 
                 return caches.match(e.request).then((r) => {
                     console.log('[Service Worker] Looking for resource in cache: '+e.request.url);
                     return r; // || new Response(JSON.stringify({ error: 1 }), { headers: { 'Content-Type': 'application/json' } }); <-- si on veut renvoyer un JSON indiquant l'erreur au lieu de laisser une erreur d'accès être capturée par l'application. 
