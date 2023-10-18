@@ -1,7 +1,7 @@
 "use strict";
 
 // URL où aller chercher les infos
-const URL = "https://ginkobus-server.onrender.com"; 
+const URL = "http://ginkobus-pwa.alwaysdata.net"; 
 
 /************************************************************************
  *                                                                      *
