@@ -35,14 +35,16 @@ self.addEventListener('install', function(e) {
 });
 
 
-self.addEventListener('fetch', (e) => {
+self.addEventListener('fetch', async (e) => {
    
+    if (!e.request.url.startsWith("http")) return;
+
     // Stratégie initiale : cache ou network avec mise en cache (le "false &&" empêche son application) 
-    false && e.respondWith(
+    e.respondWith(
         caches.match(e.request).then((r) => {
             console.log('[Service Worker] Fetching resource: '+e.request.url);
             return r || 
-                fetch(e.request).then((response) => {
+                fetch(e.request).then(async (response) => {
                     return caches.open(CACHE_NAME).then((cache) => {
                         console.log('[Service Worker] Caching new resource: '+e.request.url);
                         cache.put(e.request, response.clone());
@@ -52,22 +54,23 @@ self.addEventListener('fetch', (e) => {
         })
     );
     
-    
+    /*
+
     // Stratégie cache-only
     if (contentToCache.some(file => e.request.url.endsWith(file.substring(2)) && !e.request.url.endsWith("app.js"))) {
         console.log('[Service Worker] Loading from cache: '+e.request.url);
-        caches.match(e.request).then(r => { e.respondWith(r); });
+        await caches.match(e.request).then(r => { e.respondWith(r); });
     }
     else {
         // Stratégie network + mise en cache, ou alors cache, ou réponse par défaut  
         e.respondWith(fetch(e.request)
-            .then((response) => {
-                return caches.open(CACHE_NAME).then((cache) => {
+            .then(async (response) => {
+                return await caches.open(CACHE_NAME).then((cache) => {
                     console.log('[Service Worker] Fetching from network and caching resource: '+e.request.url);
                     cache.put(e.request, response.clone());
                     return response;
                 });
-            }, function() { 
+            }, async function() { 
                 return caches.match(e.request).then((r) => {
                     console.log('[Service Worker] Looking for resource in cache: '+e.request.url);
                     return r; // || new Response(JSON.stringify({ error: 1 }), { headers: { 'Content-Type': 'application/json' } }); <-- si on veut renvoyer un JSON indiquant l'erreur au lieu de laisser une erreur d'accès être capturée par l'application. 
@@ -75,6 +78,7 @@ self.addEventListener('fetch', (e) => {
             })
         );
     }
+    */
     
 });
 
