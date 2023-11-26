@@ -169,25 +169,25 @@
     </li>
     
     <li>L'API utilisée dans ce TP est donc une API REST <em>ad hoc</em>, hébergée sur la plateforme 
-        <a href="https://render.com" target="_blank">Render</a>, à l'adresse <code>https://ginkobus-server.onrender.com</code>.<br>
+        <a href="https://www.alwaysdata.com" target="_blank">AlwaysData</a>, à l'adresse <code>https://ginkobus-pwa.alwaysdata.net</code>.<br>
         Les routes de cette API sont les suivantes, chacune d'elle renvoie des données au format JSON dont le format est donné
         par les exemples associés : 
         <ul>
             <li><code>/stations</code> : liste toutes les stations en donnant notamment leur nom, leurs coodonnées GPS, et les lignes
                 qui passent à ces stations. <br>
-                Exemple : <a href="https://ginkobus-server.onrender.com/stations" target="_blank">https://ginkobus-server.onrender.com/stations</a>
+                Exemple : <a href="https://ginkobus-pwa.alwaysdata.net/stations" target="_blank">https://ginkobus-pwa.alwaysdata.net/stations</a>
             </li>
             <li><code>/lignes</code> : liste les lignes existantes en donnant le nom, les couleurs pour l'affichage, les 
                 directions existantes, etc. <br>
-                Exemple : <a href="https://ginkobus-server.onrender.com/lignes" target="_blank">https://ginkobus-server.onrender.com/lignes</a>
+                Exemple : <a href="https://ginkobus-pwa.alwaysdata.net/lignes" target="_blank">https://ginkobus-pwa.alwaysdata.net/lignes</a>
             </li>
             <li><code>/circuits</code> : liste les circuits existants pour permettre leur affichage sur une carte ; ces circuits sont 
                 référencés dans les descriptions des lignes (mais ils ne sont pas utilisés dans cette application). <br>
-                Exemple : <a href="https://ginkobus-server.onrender.com/circuits" target="_blank">https://ginkobus-server.onrender.com/circuits</a>
+                Exemple : <a href="https://ginkobus-pwa.alwaysdata.net/circuits" target="_blank">https://ginkobus-pwa.alwaysdata.net/circuits</a>
             </li>
             <li><code>/horaires/:ligne/:direction/:date/:heure</code> : liste les passages pour une ligne donnée, dans une 
                 direction donnée, à une date et une heure donnée. <br>
-                Exemple : <a href="https://ginkobus-server.onrender.com/horaires/3/0/20221128/12" target="_blank">https://ginkobus-server.onrender.com/horaires/3/0/20221128/12</a> donne les trajets et horaires de la ligne <code>3</code> dans 
+                Exemple : <a href="https://ginkobus-pwa.alwaysdata.net/horaires/3/0/20221128/12" target="_blank">https://ginkobus-pwa.alwaysdata.net/horaires/3/0/20221128/12</a> donne les trajets et horaires de la ligne <code>3</code> dans 
                 la direction <code>0</code> à la date du <code>28 novembre 2022</code> (au format AAAAMMJJ) autour de <code>12h</code>.
             </li>
         </ul>
@@ -259,7 +259,9 @@
     <a href="https://pages.github.com/" target="_blank">Github Pages</a> de fournir un moyen simple 
     d'hébergement de fichiers. </p>
 
+    <!--
     <iframe width="560" height="315" src="https://www.youtube.com/embed/2MsN8gpT6jY" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="display: block; width: 560px; margin: 10px auto;"></iframe>
+    -->
     
 <p>Créez un dépôt sur <a href="https://github.com/" target="_blank">Github</a> et déposez le fichier de l'application 
     web. Suivez les indications pour créer un dépôt à partir d'un dossier existant. </p>
